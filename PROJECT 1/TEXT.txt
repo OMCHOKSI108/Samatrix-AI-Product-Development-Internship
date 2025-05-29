@@ -1,1 +1,177 @@
+Portfolio Risk Analysis and Financial Metrics Calculation
+Project Overview
+This project focuses on analyzing a portfolio of five major technology stocks (TSLA, AAPL, GOOGL, MSFT, AMZN) to compute key financial risk metrics such as Value at Risk (VaR), Expected Shortfall (ES), Maximum Drawdown (MDD), and Sharpe Ratio. It also includes a Monte Carlo simulation to model future portfolio returns and statistical tests like the Jarque-Bera test to assess the normality of portfolio returns. The analysis leverages historical stock price data from January 1, 2020, to the current date (May 29, 2025) to provide data-driven insights for portfolio management and risk assessment.
+Objectives
+
+Data Retrieval: Download historical stock price data for the specified stocks using the yfinance library, with a fallback to pandas_datareader (Stooq) if needed.
+Portfolio Construction: Build a portfolio with equal weightings (20% each) for the five stocks.
+Risk Metrics Calculation:
+Compute log returns for the portfolio.
+Calculate Value at Risk (VaR) at a 95% confidence level.
+Compute Expected Shortfall (ES) assuming a normal distribution for tail losses.
+Calculate Sharpe Ratio to evaluate risk-adjusted returns.
+Perform a Monte Carlo simulation to estimate a possible future portfolio return.
+
+
+Statistical Analysis: Conduct a Jarque-Bera test to check the normality of portfolio returns.
+Visualization: Plot a rolling 60-day historical VaR to visualize risk trends.
+
+Technologies Used
+
+Python Libraries:
+numpy: For numerical computations and array operations.
+pandas: For data manipulation and DataFrame operations.
+matplotlib and seaborn: For data visualization.
+yfinance: For downloading historical stock price data.
+pandas_datareader: As a fallback for data retrieval from Stooq.
+scipy.stats: For statistical tests (Jarque-Bera) and normal distribution calculations.
+
+
+Environment: Jupyter Notebook (Python 3.12.7)
+Data Source: Yahoo Finance (primary), Stooq (fallback)
+Time Period: January 1, 2020, to May 29, 2025
+
+Methodology
+
+Data Collection:
+
+Historical closing prices for TSLA, AAPL, GOOGL, MSFT, and AMZN are retrieved using yfinance.
+A fallback mechanism uses pandas_datareader to fetch data from Stooq if yfinance fails.
+Missing data is handled by forward and backward filling to ensure a complete dataset.
+The portfolio is equally weighted (20% per stock).
+
+
+Log Returns Calculation:
+
+Log returns are computed as ln(P_t / P_{t-1}), where P_t is the closing price at time t.
+This provides a normalized measure of daily price changes.
+
+
+Risk Metrics:
+
+Value at Risk (VaR): Calculated at a 95% confidence level using historical data. A rolling 60-day VaR is computed and visualized to assess risk over time.
+Expected Shortfall (ES): For a given VaR of $10,000 at 95% confidence, ES is calculated assuming a normal distribution for tail losses. The formula used is:[ES = \frac{\phi(z)}{1 - \alpha} \cdot \sigma]where (\phi(z)) is the standard normal PDF, (z) is the z-score for the confidence level ((\alpha = 0.95)), and (\sigma) is the portfolio standard deviation derived from VaR.
+Sharpe Ratio: Calculated as:[\text{Sharpe Ratio} = \frac{\text{Expected Return} - \text{Risk-Free Rate}}{\text{Standard Deviation}}]Using given values: expected return = 12%, risk-free rate = 2%, standard deviation = 18%.
+Maximum Drawdown (MDD): Not explicitly computed in the provided code but referenced in the project description as a key metric.
+
+
+Statistical Testing:
+
+The Jarque-Bera test is performed to test whether portfolio returns follow a normal distribution. A p-value < 0.05 indicates rejection of normality.
+
+
+Monte Carlo Simulation:
+
+A single future portfolio return is simulated using a log-normal model:[R_t = e^{\mu t + \sigma \sqrt{t} Z} - 1]where (\mu = \text{mean return} - 0.5 \cdot \sigma^2), (\sigma = 0.12), (t = 1) year, and (Z \sim N(0,1)).
+
+
+Visualization:
+
+A plot of the rolling 60-day historical VaR at 95% confidence is generated, with a static VaR line for comparison.
+
+
+
+Results
+
+Data Retrieval:
+
+Historical stock prices were successfully retrieved, though the code encountered issues with yfinance (error: 'list' object has no attribute 'upper'), leading to fallback to Stooq.
+The resulting DataFrame contains daily closing prices for all five stocks, with missing values handled appropriately.
+
+
+Log Returns:
+
+Log returns were calculated and displayed for the initial days, showing daily fluctuations in stock prices.
+
+
+Expected Shortfall (ES):
+
+For a VaR of $10,000 at 95% confidence, the ES was computed as $12,540.40, indicating the expected loss in the worst 5% of cases under a normal distribution assumption.
+
+
+Sharpe Ratio:
+
+The Sharpe Ratio was calculated as 0.5556, suggesting a moderate risk-adjusted return for the portfolio (0.12 - 0.02) / 0.18.
+
+
+Monte Carlo Simulation:
+
+A single simulated return was generated, resulting in a return of -15.61% (based on a random Z-score of -1.9379). Note that this is one possible outcome and depends on the random seed.
+
+
+Jarque-Bera Test:
+
+The test yielded a JB statistic of 979.70 and a p-value of 0.000, leading to rejection of the null hypothesis that portfolio returns are normally distributed at the 5% significance level.
+
+
+Visualization:
+
+The rolling 60-day VaR plot was generated, though the notebook indicates an issue (variable portR undefined in the plotting cell), suggesting a potential error in the code.
+
+
+
+Technical Understanding
+
+Data Handling: The use of yfinance and pandas_datareader ensures robust data retrieval, with error handling for API failures. Forward and backward filling addresses missing data, which is common in financial datasets due to non-trading days.
+Log Returns: Log returns are preferred over simple returns for their additive properties and suitability for statistical modeling, especially in risk calculations.
+VaR and ES: The historical VaR calculation uses a rolling quantile, while ES assumes normality for simplicity, which may not hold given the Jarque-Bera test results.
+Sharpe Ratio: The calculation is straightforward and aligns with standard financial practice, providing a quick measure of risk-adjusted performance.
+Monte Carlo Simulation: The log-normal model is appropriate for simulating asset returns over a single period, though multiple simulations would provide a distribution of possible outcomes.
+Statistical Testing: The Jarque-Bera test confirms that portfolio returns deviate from normality, which has implications for risk modeling (e.g., VaR and ES may underestimate risk under non-normal distributions).
+Code Issues: The notebook contains errors:
+The yfinance call incorrectly passes the entire ticker list to yf.Ticker, causing an attribute error. It should iterate over individual tickers.
+The variable portR (portfolio returns) is undefined in the VaR plotting cell, indicating missing code to compute weighted portfolio returns.
+The VAR_norm variable (static VaR) is undefined, preventing proper visualization.
+
+
+
+Conclusions
+
+Portfolio Risk: The portfolio exhibits significant non-normality in returns (per Jarque-Bera test), suggesting that risk models assuming normality (e.g., ES calculation) may underestimate tail risks. Alternative distributions (e.g., t-distribution) could improve accuracy.
+Risk Metrics:
+The ES of $12,540.40 indicates a higher expected loss in extreme scenarios compared to the VaR of $10,000.
+The Sharpe Ratio of 0.5556 suggests moderate performance relative to risk, though comparisons to benchmarks (e.g., S&P 500) would provide context.
+The Monte Carlo simulation shows a potential negative return, highlighting the uncertainty in future performance.
+
+
+Data Reliability: The fallback to Stooq ensures data availability, but consistency between data sources should be verified to avoid discrepancies.
+Code Improvements: Fixing the yfinance loop (iterating over individual tickers) and defining portR (e.g., as logR @ weights) would resolve errors and enable complete analysis.
+Future Work:
+Compute Maximum Drawdown (MDD) to assess peak-to-trough losses.
+Expand Monte Carlo simulations to generate a distribution of returns.
+Incorporate alternative risk models (e.g., CVaR with non-normal distributions).
+Validate data consistency across sources and handle non-trading days more explicitly.
+
+
+
+How to Run
+
+Install Dependencies:pip install pandas numpy matplotlib seaborn yfinance pandas_datareader scipy
+
+
+Run the Notebook:
+Open Task1_omchoksi.ipynb in Jupyter Notebook.
+Execute cells sequentially, ensuring internet access for data retrieval.
+Note: Fix the yfinance loop and define portR and VAR_norm to resolve errors.
+
+
+Expected Output:
+DataFrame of stock prices and log returns.
+ES, Sharpe Ratio, and Monte Carlo simulation results.
+Jarque-Bera test results.
+Rolling VaR plot (after fixing errors).
+
+
+
+Limitations
+
+Data Source Reliability: The fallback to Stooq may introduce inconsistencies if data formats differ.
+Normality Assumption: The ES calculation assumes a normal distribution, which is contradicted by the Jarque-Bera test.
+Single Simulation: The Monte Carlo simulation provides one outcome; multiple runs are needed for a robust analysis.
+Code Errors: Undefined variables and incorrect API usage need resolution for full functionality.
+
+Author
+
+Name: Om Chiragbhai Choksi
+Context: Samatrix Internship Task (Finance Domain 1)
 
