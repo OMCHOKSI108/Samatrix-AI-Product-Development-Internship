@@ -1,1 +1,31 @@
+Project Title: Website A/B Testing for Conversion Optimization
 
+Author: Om Chiragbhai Choksi Date: May 29, 2025
+
+Project Description: This project conducts an A/B testing analysis to compare the conversion rates of two website variants (A and B) to optimize user conversions. Simulated click-through data for 10,000 visitors per variant is used, with true conversion rates of 10% for Variant A and 12% for Variant B. The analysis calculates conversion rates, 95% confidence intervals, and performs statistical tests to determine if the difference in conversion rates is significant. Python libraries (numpy, pandas, scipy, matplotlib, seaborn) are used for implementation.
+
+Methodology:
+
+
+
+Simulated conversions using binomial distribution: Variant A (10,000 visitors, 10% true rate, 973 conversions), Variant B (10,000 visitors, 12% true rate, 1134 conversions).
+Calculated conversion rates and 95% confidence intervals using a custom function.
+erformed a z-test for proportions to assess statistical significance.
+Conducted sequential testing over 60 batches to monitor p-values and lift (CR_B - CR_A) over time.
+Visualized results with plots for sequential p-values and observed lift.
+
+Key Results:
+
+
+Conversion Rates: Variant A = 9.73% (CI: 9.15% - 10.31%), Variant B = 11.34% (CI: 10.72% - 11.96%).
+Sequential p-value dropped below 0.05 after the first batch, stabilizing near 0, indicating a statistically significant difference.
+Observed lift (CR_B - CR_A) started at ~7% but stabilized at ~2%, matching the true difference (12% - 10%).
+The difference in conversion rates is statistically significant, with Variant B outperforming Variant A.
+
+Insights:
+
+Variant B consistently shows a 2% higher conversion rate, which is statistically significant early in the experiment.
+Sequential testing allowed for early detection of significance, potentially reducing experiment duration.
+The 2% lift should be evaluated for practical significance based on business goals before implementing Variant B.
+
+Conclusion: The A/B test confirms that Variant B has a statistically significant higher conversion rate than Variant A by approximately 2%. This data-driven insight can guide website optimization decisions, though the practical impact of the lift should be assessed in a business context.
